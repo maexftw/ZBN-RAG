@@ -89,14 +89,21 @@
         
         // Logout-Handler
         logoutBtn.addEventListener('click', async () => {
+            const token = getAuthToken();
             try {
-                await fetch(`${API_BASE_URL}/api/logout`, {
-                    method: 'POST',
-                    credentials: 'include'
-                });
+                if (token) {
+                    await fetch(`${API_BASE_URL}/api/logout`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                }
+                localStorage.removeItem('auth_token');
                 window.location.href = 'login.html';
             } catch (error) {
                 console.error('Logout error:', error);
+                localStorage.removeItem('auth_token');
                 window.location.href = 'login.html';
             }
         });
@@ -115,13 +122,20 @@
             submitBtn.disabled = true;
             submitBtn.textContent = 'Suche läuft...';
             
+            const token = getAuthToken();
+            if (!token) {
+                showError('Nicht authentifiziert');
+                window.location.href = 'login.html';
+                return;
+            }
+            
             try {
                 const response = await fetch(`${API_BASE_URL}/api/query`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
                     },
-                    credentials: 'include',
                     body: JSON.stringify({ query })
                 });
                 
@@ -180,9 +194,17 @@
         }
         
         async function checkAuth() {
+            const token = localStorage.getItem('auth_token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
             try {
                 const response = await fetch(`${API_BASE_URL}/api/status`, {
-                    credentials: 'include'
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
                 });
                 
                 if (response.ok) {
@@ -192,12 +214,19 @@
                         return;
                     }
                 }
-                // Nicht authentifiziert - weiterleiten
+                // Token ungültig - weiterleiten
+                localStorage.removeItem('auth_token');
                 window.location.href = 'login.html';
             } catch (error) {
                 console.error('Auth check error:', error);
+                localStorage.removeItem('auth_token');
                 window.location.href = 'login.html';
             }
+        }
+        
+        // Token für API-Calls verfügbar machen
+        function getAuthToken() {
+            return localStorage.getItem('auth_token');
         }
     </script>
 </body>

@@ -80,7 +80,9 @@
                 
                 const data = await response.json();
                 
-                if (response.ok && data.success) {
+                if (response.ok && data.success && data.token) {
+                    // Token speichern
+                    localStorage.setItem('auth_token', data.token);
                     // Erfolgreich eingeloggt - weiterleiten
                     window.location.href = 'index.html';
                 } else {
