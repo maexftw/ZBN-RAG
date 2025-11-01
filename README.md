@@ -1,6 +1,6 @@
-# IFBS RAG-System - Web Interface
+# RAG-System - Web Interface
 
-Web-Interface für das lokale IFBS RAG-System (Retrieval-Augmented Generation).
+Web-Interface für das lokale RAG-System (Retrieval-Augmented Generation).
 
 ## 🚀 Live-Demo
 
@@ -63,7 +63,7 @@ git push
 
 1. Öffne die GitHub Pages URL
 2. Logge dich ein
-3. Stelle Fragen zu IFBS-Richtlinien, DIN-Normen und Fachgutachten
+3. Stelle Fragen zu Richtlinien, Normen und Fachgutachten
 4. Das System durchsucht die indexierten Dokumente und gibt präzise Antworten
 
 ## 🛠️ Entwicklung

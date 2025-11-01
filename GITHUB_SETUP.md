@@ -9,8 +9,8 @@
 
 1. Gehe zu https://github.com
 2. Klicke auf "New repository" (oder das + Symbol)
-3. Repository Name: z.B. `zbn-rag-ui` oder `ifbs-rag-system`
-4. Beschreibung: "IFBS RAG-System Web Interface"
+3. Repository Name: z.B. `zbn-rag-ui` oder `rag-system-ui`
+4. Beschreibung: "RAG-System Web Interface"
 5. Public oder Private (deine Wahl)
 6. **WICHTIG:** Lasse alle Checkboxen leer (kein README, keine .gitignore, keine License)
 7. Klicke "Create repository"
@@ -29,7 +29,7 @@ git init
 git add .
 
 # Ersten Commit erstellen
-git commit -m "Initial commit - IFBS RAG UI"
+git commit -m "Initial commit - RAG UI"
 
 # GitHub Repository hinzufügen (ersetze USERNAME und REPO-NAME!)
 git remote add origin https://github.com/USERNAME/REPO-NAME.git
@@ -133,7 +133,7 @@ git push
 2. Login mit:
    - Username: `admin`
    - Passwort: `admin123`
-3. Stelle eine Test-Frage: "Welche IFBS-Richtlinien gelten für Fassaden?"
+3. Stelle eine Test-Frage: "Welche Richtlinien gelten für Fassaden?"
 
 ## Troubleshooting
 
