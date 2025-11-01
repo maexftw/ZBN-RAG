@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IFBS RAG-System - Abfrage</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header-bar">
+            <div class="header-content">
+                <h1>IFBS RAG-System</h1>
+                <div class="header-actions">
+                    <span id="usernameDisplay" class="username"></span>
+                    <button id="logoutBtn" class="btn btn-secondary btn-small">Abmelden</button>
+                </div>
+            </div>
+        </header>
+        
+        <main class="main-content">
+            <div class="query-card">
+                <h2>Frage an das IFBS-Dokumentensystem</h2>
+                <p class="description">
+                    Stellen Sie Fragen zu IFBS-Richtlinien, DIN-Normen und Fachgutachten.
+                    Das System durchsucht die indexierten Dokumente und gibt Ihnen präzise Antworten.
+                </p>
+                
+                <form id="queryForm" class="query-form">
+                    <div class="form-group">
+                        <label for="queryInput">Ihre Frage</label>
+                        <textarea 
+                            id="queryInput" 
+                            name="query" 
+                            rows="4" 
+                            required
+                            placeholder="z.B. Welche IFBS-Richtlinien gelten für Fassaden?"
+                        ></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        Frage stellen
+                    </button>
+                </form>
+            </div>
+            
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+            
+            <div id="loadingIndicator" class="loading-indicator" style="display: none;">
+                <div class="spinner"></div>
+                <p>Suche in Dokumenten und generiere Antwort...</p>
+            </div>
+            
+            <div id="resultsContainer" class="results-container" style="display: none;">
+                <div class="result-card">
+                    <h3>Antwort</h3>
+                    <div id="answerContent" class="answer-content"></div>
+                </div>
+                
+                <div class="sources-card">
+                    <h3>Quellen</h3>
+                    <ul id="sourcesList" class="sources-list"></ul>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="footer">
+            <p>Lokales RAG-System - Alle Daten bleiben auf Ihrem Rechner</p>
+        </footer>
+    </div>
+    
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+    <script>
+        // Haupt-Seiten-Logik
+        const queryForm = document.getElementById('queryForm');
+        const queryInput = document.getElementById('queryInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const errorMessage = document.getElementById('errorMessage');
+        const answerContent = document.getElementById('answerContent');
+        const sourcesList = document.getElementById('sourcesList');
+        const usernameDisplay = document.getElementById('usernameDisplay');
+        const logoutBtn = document.getElementById('logoutBtn');
+        
+        // Prüfe Authentifizierung beim Laden
+        checkAuth();
+        
+        // Logout-Handler
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await fetch(`${API_BASE_URL}/api/logout`, {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                window.location.href = 'login.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+                window.location.href = 'login.html';
+            }
+        });
+        
+        // Query-Handler
+        queryForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const query = queryInput.value.trim();
+            if (!query) return;
+            
+            // UI zurücksetzen
+            errorMessage.style.display = 'none';
+            resultsContainer.style.display = 'none';
+            loadingIndicator.style.display = 'block';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Suche läuft...';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/query`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ query })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    // Erfolgreiche Antwort
+                    displayResults(data);
+                } else {
+                    // Fehler anzeigen
+                    showError(data.error || 'Fehler bei der Abfrage');
+                }
+            } catch (error) {
+                showError(`Verbindungsfehler: ${error.message}`);
+            } finally {
+                loadingIndicator.style.display = 'none';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Frage stellen';
+            }
+        });
+        
+        function displayResults(data) {
+            // Antwort anzeigen
+            answerContent.innerHTML = formatAnswer(data.answer);
+            
+            // Quellen anzeigen
+            sourcesList.innerHTML = '';
+            data.sources.forEach((source, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <strong>${index + 1}.</strong> 
+                    <span class="source-filename">${escapeHtml(source.filename)}</span>
+                    <span class="source-type">(${escapeHtml(source.type)})</span>
+                `;
+                sourcesList.appendChild(li);
+            });
+            
+            resultsContainer.style.display = 'block';
+            resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        
+        function formatAnswer(text) {
+            // Einfaches Formatting für Antworten
+            return escapeHtml(text).replace(/\n/g, '<br>');
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+        
+        async function checkAuth() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/status`, {
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.authenticated) {
+                        usernameDisplay.textContent = data.username;
+                        return;
+                    }
+                }
+                // Nicht authentifiziert - weiterleiten
+                window.location.href = 'login.html';
+            } catch (error) {
+                console.error('Auth check error:', error);
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+</body>
+</html>
+
