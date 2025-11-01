@@ -10,7 +10,7 @@
 // const API_BASE_URL = 'http://localhost:5000';
 
 // Für GitHub Pages: Aktuelle LocalTunnel-URL
-const API_BASE_URL = 'https://ten-friends-type.loca.lt';
+const API_BASE_URL = 'https://tough-corners-roll.loca.lt';
 
 // Beispiel-Konfigurationen:
 // SSH-Tunnel (Port 8080): const API_BASE_URL = 'http://localhost:8080';
