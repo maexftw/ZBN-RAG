@@ -1,46 +1,111 @@
-# IFBS RAG-System - Web Frontend
+# IFBS RAG-System - Web Interface
 
-Dieses Frontend ermöglicht den Zugriff auf das lokale RAG-System über einen Browser.
+Web-Interface für das lokale IFBS RAG-System (Retrieval-Augmented Generation).
 
-## Setup für GitHub Pages
+## 🚀 Live-Demo
 
-1. Dieses Verzeichnis (`web/`) als GitHub Repository hochladen
-2. GitHub Pages aktivieren (Settings > Pages)
-3. `config.js` anpassen mit deiner API-URL
+Nach Aktivierung von GitHub Pages erreichbar unter:
+**https://maexftw.github.io/ZBN-RAG/**
 
-## Lokale Entwicklung
+## 📋 Voraussetzungen
+
+1. **Backend läuft lokal** auf deinem Rechner (Port 5000)
+2. **SSH-Tunnel oder Ngrok** für Remote-Zugriff eingerichtet
+3. **GitHub Pages aktiviert** (siehe unten)
+
+## ⚙️ GitHub Pages aktivieren
+
+1. Gehe zu: https://github.com/maexftw/ZBN-RAG/settings/pages
+2. Unter "Source":
+   - Wähle "Deploy from a branch"
+   - Branch: `main`
+   - Folder: `/ (root)`
+3. Klicke "Save"
+
+Die Seite ist dann unter `https://maexftw.github.io/ZBN-RAG/` erreichbar.
+
+## 🔧 Konfiguration
+
+### API-Endpoint konfigurieren
+
+Bearbeite `config.js` und passe die URL an:
+
+**Für lokale Tests:**
+```javascript
+const API_BASE_URL = 'http://localhost:5000';
+```
+
+**Für SSH-Tunnel:**
+```javascript
+const API_BASE_URL = 'http://localhost:8080';
+```
+
+**Für Ngrok:**
+```javascript
+const API_BASE_URL = 'https://deine-ngrok-url.ngrok.io';
+```
+
+Nach Änderung:
+```bash
+git add config.js
+git commit -m "Update API endpoint"
+git push
+```
+
+## 🔐 Login
+
+- **Username:** `admin`
+- **Passwort:** `admin123`
+
+*(Passwort kann im Backend geändert werden)*
+
+## 📱 Nutzung
+
+1. Öffne die GitHub Pages URL
+2. Logge dich ein
+3. Stelle Fragen zu IFBS-Richtlinien, DIN-Normen und Fachgutachten
+4. Das System durchsucht die indexierten Dokumente und gibt präzise Antworten
+
+## 🛠️ Entwicklung
+
+### Lokal testen
 
 ```bash
-# In diesem Verzeichnis
+cd web
 python -m http.server 8000
-
-# Dann öffne: http://localhost:8000
 ```
 
-## Konfiguration
+Dann öffne: `http://localhost:8000`
 
-Passe `config.js` an:
+### Änderungen hochladen
 
-```javascript
-const API_BASE_URL = 'http://localhost:5000';  // Lokal
-// oder
-const API_BASE_URL = 'http://localhost:8080';  // SSH-Tunnel
-// oder
-const API_BASE_URL = 'https://dein-tunnel.ngrok.io';  // Ngrok
+```bash
+git add .
+git commit -m "Beschreibung der Änderung"
+git push
 ```
 
-## Dateien
+GitHub Pages aktualisiert sich automatisch (kann 1-2 Minuten dauern).
 
-- `login.html` - Login-Seite
+## 📚 Weitere Informationen
+
+- Backend-Dokumentation: Siehe `rag_system/DEPLOYMENT.md`
+- Setup-Anleitung: Siehe `GITHUB_SETUP.md`
+
+## 🔒 Sicherheit
+
+- Alle Daten bleiben lokal auf deinem Rechner
+- Keine Cloud-Dienste verwendet
+- Authentifizierung erforderlich für API-Zugriff
+
+## 📝 Dateien
+
 - `index.html` - Hauptseite mit Query-Interface
+- `login.html` - Login-Seite
 - `styles.css` - Styling
 - `app.js` - Utility-Funktionen
 - `config.js` - API-Konfiguration
 
-## Browser-Kompatibilität
+---
 
-- Chrome/Edge (empfohlen)
-- Firefox
-- Safari
-- Mobile Browser (iOS Safari, Chrome Mobile)
-
+**Entwickelt für ZBN - Lokales RAG-System**
