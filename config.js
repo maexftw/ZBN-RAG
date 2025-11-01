@@ -6,7 +6,7 @@
 // STANDARD: localhost (für lokale Tests)
 // FÜR SSH-TUNNEL: Ändere zu deiner Tunnel-URL
 // FÜR GITHUB PAGES: Ändere zu deiner öffentlichen URL (z.B. ngrok, Cloudflare Tunnel)
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'https://gentle-queens-wave.loca.lt';
 
 // Beispiel-Konfigurationen:
 // SSH-Tunnel (Port 8080): const API_BASE_URL = 'http://localhost:8080';
