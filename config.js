@@ -6,11 +6,14 @@
 // STANDARD: localhost (für lokale Tests)
 // FÜR SSH-TUNNEL: Ändere zu deiner Tunnel-URL
 // FÜR GITHUB PAGES: Ändere zu deiner öffentlichen URL (z.B. ngrok, Cloudflare Tunnel)
-// Für lokale Tests (einfachste Lösung)
+// Cloudflare Tunnel URL (für Online-Zugriff)
+const API_BASE_URL = 'https://facilitate-radar-strongly-sponsor.trycloudflare.com';
+
+// Für lokale Tests (auskommentiert):
 // const API_BASE_URL = 'http://localhost:5000';
 
 // Für GitHub Pages: Aktuelle LocalTunnel-URL
-const API_BASE_URL = 'https://tough-corners-roll.loca.lt';
+// const API_BASE_URL = 'https://tough-corners-roll.loca.lt';
 
 // Beispiel-Konfigurationen:
 // SSH-Tunnel (Port 8080): const API_BASE_URL = 'http://localhost:8080';
